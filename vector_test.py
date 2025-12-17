@@ -18,8 +18,8 @@ mc_image = cv2.imread(
 )
 
 # 1. Get inputs from separate files
-mass_region, clean_mask = get_mass_data(None)
-mc_contours, intensity_image = get_mc_data(mc_image)
+mass_region, clean_mask = get_mass_data(image_mass)
+mc_contours, intensity_image = get_mc_data(None)
 
 # 2. Extract features
 mass_features = extract_mass_features(mass_region, clean_mask)
