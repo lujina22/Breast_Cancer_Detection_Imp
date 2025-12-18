@@ -145,6 +145,13 @@ def extract_mc_features(mc_contours, tophat_norm):
 
 def build_master_vector(mass_features, mc_features):
     """
-    Combine both feature lists into final master vector
+    Combine mass + microcalcification features into one vector
     """
-    return mass_features + mc_features
+
+    # Convert mass features DataFrame → list
+    mass_vector = mass_features.iloc[0].values.tolist()
+
+    # mc_features is already a list
+    master_vector = mass_vector + mc_features
+
+    return master_vector
