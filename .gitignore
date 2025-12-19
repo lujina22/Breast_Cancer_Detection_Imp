@@ -3,6 +3,9 @@
 
 Dataset/
 archive/
+jpeg/
+all-mias/
+images/
 
 # Ignore specific large file extensions
 *.xlsx
@@ -12,7 +15,6 @@ archive/
 *.tar.gz
 *.mp4
 *.h5
-*.pkl
 *.psd
 *.weights
 *.pth

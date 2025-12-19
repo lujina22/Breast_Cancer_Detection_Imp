@@ -1,0 +1,2 @@
+total_images,successful_detections,detection_rate,hit_count,avg_hit_rate,avg_iou,std_iou,min_iou,max_iou,median_iou
+37,35,94.5945945945946,15,42.857142857142854,0.1628279220386708,0.21308120721261511,0.0,0.8738352849553583,0.08154122795164694
