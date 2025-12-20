@@ -88,59 +88,60 @@ def extract_mass_features(mass_region_gray, clean_mask):
 
 
 def extract_mc_features(mc_contours, tophat_norm):
-    
     """
-    mc_contours: list of contours for MCs
-    intensity_image: your tophat_norm or clahe image
+    Extract microcalcification features safely
     """
+
+    # ---------- DEFAULTS (IMPORTANT) ----------
+    mc_count = 0
+    mc_avg_area = 0.0
+    mc_std_area = 0.0
+    mc_density  = 0.0
+    mc_mean_int = 0.0
+
+    # ---------- VALIDITY CHECK ----------
+    if mc_contours is None or tophat_norm is None:
+        return [mc_count, mc_avg_area, mc_std_area, mc_density, mc_mean_int]
+
     mc_count = len(mc_contours)
-    
-    
-    
     if mc_count == 0:
-        # default values
-        mc_avg_area = 0
-        mc_std_area = 0
-        mc_density  = 0
-        mc_mean_int = 0
-    
-    if mc_count > 0:
-        areas = [cv2.contourArea(c) for c in mc_contours]
-        mc_avg_area = float(np.mean(areas))
-        mc_std_area = float(np.std(areas))
-        
-        
-        # --- cluster density ---
-        if mc_count > 1:
-            xs, ys = [], []
-            for c in mc_contours:
-                x, y, w, h = cv2.boundingRect(c)
-                xs.extend([x, x + w])
-                ys.extend([y, y + h])
+        return [mc_count, mc_avg_area, mc_std_area, mc_density, mc_mean_int]
 
-            cluster_area = (max(xs)-min(xs)) * (max(ys)-min(ys))
-            mc_density = mc_count / (cluster_area + 1e-6)
+    # ---------- AREA FEATURES ----------
+    areas = [cv2.contourArea(c) for c in mc_contours]
+    mc_avg_area = float(np.mean(areas))
+    mc_std_area = float(np.std(areas))
 
-
-        # --- average intensity of MCs ---
-        mask = np.zeros_like(tophat_norm, dtype=np.uint8)
+    # ---------- DENSITY ----------
+    if mc_count > 1:
+        xs, ys = [], []
         for c in mc_contours:
-            cv2.drawContours(mask, [c], -1, 255, -1)
+            x, y, w, h = cv2.boundingRect(c)
+            xs.extend([x, x + w])
+            ys.extend([y, y + h])
 
-        vals = tophat_norm[mask == 255]
-        if len(vals) > 0:
-            mc_mean_int = float(np.mean(vals))
-            
-    
-    mc_feature_vector = [
+        cluster_area = (max(xs) - min(xs)) * (max(ys) - min(ys)) + 1e-6
+        mc_density = mc_count / cluster_area
+    else:
+        mc_density = 0.0
+
+    # ---------- INTENSITY ----------
+    mask = np.zeros_like(tophat_norm, dtype=np.uint8)
+    for c in mc_contours:
+        cv2.drawContours(mask, [c], -1, 255, -1)
+
+    vals = tophat_norm[mask == 255]
+    if len(vals) > 0:
+        mc_mean_int = float(np.mean(vals))
+
+    return [
         mc_count,
         mc_avg_area,
         mc_std_area,
         mc_density,
         mc_mean_int
     ]
-
-    return mc_feature_vector        
+ 
 
 
 def build_master_vector(mass_features, mc_features):
