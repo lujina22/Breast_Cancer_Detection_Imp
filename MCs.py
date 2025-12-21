@@ -22,6 +22,10 @@ def load_image(path):
 # Crop ROI around (x, y)
 # -------------------------
 def image_crop(img, cx, cy, size=256):
+
+    if (cx == 0 & cy == 0):
+        return img
+    
     half = size // 2
     h, w = img.shape
     cy = h - cy 
@@ -251,6 +255,7 @@ def get_mc_data(img, x, y, radius, roi_size=256):
     overlay[overlap] = [255, 255, 0]
 
     return contours, tophat_norm, overlay
+
 
 
 
