@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASS Detection - Breast Cancer Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">🔬</div>
+                <h1>MASS Detection</h1>
+            </div>
+            <p class="subtitle">Advanced Breast Cancer Tumor Detection & Analysis</p>
+        </header>
+
+        <!-- Upload Section -->
+        <section class="upload-section" id="uploadSection">
+            <div class="upload-card">
+                <div class="upload-icon">📤</div>
+                <h2>Upload Mammogram Image</h2>
+                <p class="upload-description">Drag & drop your image here or click to browse</p>
+                
+                <div class="drop-zone" id="dropZone">
+                    <div class="drop-zone-content">
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p class="drop-text">Drop your image here</p>
+                        <p class="or-text">or</p>
+                        <button type="button" class="browse-btn" id="browseBtn">Browse Files</button>
+                        <input type="file" id="fileInput" accept="image/*,.pgm" hidden>
+                        <p class="file-info">Supported formats: PNG, JPG, JPEG, PGM, TIF, TIFF</p>
+                    </div>
+                </div>
+
+                <!-- Image Preview -->
+                <div class="preview-container" id="previewContainer" style="display: none;">
+                    <div class="preview-header">
+                        <h3>📷 Image Preview</h3>
+                        <button type="button" class="remove-btn" id="removeBtn">✕ Remove</button>
+                    </div>
+                    <img id="previewImage" src="" alt="Preview">
+                    <button type="button" class="detect-btn" id="detectBtn">
+                        <span class="btn-text">🔍 Detect Tumor</span>
+                        <span class="btn-loader" style="display: none;">
+                            <span class="spinner"></span>
+                            Processing...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section" id="resultsSection" style="display: none;">
+            <h2 class="results-title">✨ Detection Results</h2>
+            
+            <div class="results-grid">
+                <!-- Original with Mask -->
+                <div class="result-card">
+                    <div class="result-header">
+                        <h3>🎯 Original with Mask</h3>
+                        <span class="result-badge">Overlay</span>
+                    </div>
+                    <div class="result-image-container">
+                        <img id="resultOverlay" src="" alt="Original with Mask Overlay">
+                    </div>
+                    <p class="result-description">Original mammogram with tumor region highlighted in red</p>
+                </div>
+
+                <!-- Isolated Tumor -->
+                <div class="result-card">
+                    <div class="result-header">
+                        <h3>🔬 Isolated Tumor</h3>
+                        <span class="result-badge">Segmentation</span>
+                    </div>
+                    <div class="result-image-container">
+                        <img id="resultIsolated" src="" alt="Isolated Tumor Region">
+                    </div>
+                    <p class="result-description">Extracted tumor region showing MASS area</p>
+                </div>
+
+                <!-- Centroid & Circle -->
+                <div class="result-card">
+                    <div class="result-header">
+                        <h3>📍 Centroid & Circle</h3>
+                        <span class="result-badge">Analysis</span>
+                    </div>
+                    <div class="result-image-container">
+                        <img id="resultCentroid" src="" alt="Centroid with Bounding Circle">
+                    </div>
+                    <p class="result-description">Tumor centroid (green) with minimum enclosing circle (cyan)</p>
+                </div>
+            </div>
+
+            <button type="button" class="new-analysis-btn" id="newAnalysisBtn">
+                🔄 Analyze Another Image
+            </button>
+        </section>
+
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage" style="display: none;">
+            <div class="error-content">
+                <span class="error-icon">⚠️</span>
+                <span class="error-text" id="errorText"></span>
+            </div>
+            <button type="button" class="error-close" id="errorClose">✕</button>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Powered by KM++CSO Algorithm | Advanced Medical Image Analysis</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
